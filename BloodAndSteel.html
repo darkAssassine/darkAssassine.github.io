@@ -77,12 +77,113 @@
 					</div>
 				</header>
 				<a href="BloodAndSteel.html" class="image featured"><img src="images/BloodAndSteelMain.png" alt="" /></a>
-				<p>Blood and Steel is a first-person arena fighting game built in Unity using C#. This project significantly advanced my C# and Unity skills. 
+				<p>Blood and Steel is a first-person arena fighting game built in Unity using C#. It was created during my second semester. This project significantly advanced my C# and Unity skills. 
 					I developed a deeper understanding of code organization and structure, which improved my overall programming approach. 
 					Working on a combat system taught me crucial lessons about responsive gameplay mechanics and what makes interactions feel satisfying to players in a group project context.</p>
+
+					<h2>About the Game</h2>
+					
+					<span class="image right"><img src="images/BloodAndSteel0.gif" alt="" /></span>
+				<p>
+					Blood and Steel is a first-person arena fighting game focused on intense, fast-paced medieval combat. 
+					Players face off in close-quarters battles using a variety of melee weapons across uniquely designed arenas. 
+					The game features fluid player movement and a dynamic combat system, including sword strikes, knockback kicks, 
+					and the ability to throw and retrieve your weapon. Players must adapt to two distinct enemy types, each with their own attack patterns, 
+					adding variety and challenge to each encounter. 
+					With handcrafted arenas built for nonstop action, 
+					Blood and Steel delivers a brutal and immersive melee experience.
+				</p>
+
+					
+				
+				<h2>Features</h2>
+				<span class="image right"><img src="images/BloodAndSteel1.gif" alt="" /></span>
+				<ul>
+					<li>Two enemy types, each with distinct attack patterns</li>
+					<li>Fluid player movement</li>
+					<li>Melee combat system, including sword attacks and knockback kicks</li>
+					<li>Weapon mechanics, allowing players to throw and retrieve their sword</li>
+					<li>Enemy spawner and wavesystem</li>
+					<li>Reusable vfx and sounds system</li>
+
+				</ul>
+
+				<h2>The Team</h2>
+				<ul>
+					<span class="image right"><img src="images/BloodAndSteel2.gif" alt="" /></span>
+					<li>Benjamin Köcher: Engineer</li>
+					
+					<li>Fabrizio Maggiacomo: 3D ART, Character Models, Animation</li>
+					<li>Florian Koch: 3D ART, VFX</li>
+					<li>Leo Weber: 2D ART, Concept Art</li>
+					<li>Maximillian Brunsch: Game Design, Level Design</li>
+					<li>Moritz Schmidt:  3D ART, 2D ART, Art Direction, Environment, UI</li>
+				</ul>
+				<h2>Scripts</h2>
+				<h3>Enemy</h3>
+				<code>using UnityEngine; <br>
+
+
+					[RequireComponent(typeof(HealthEvent))]<br>
+					public class Enemy : MonoBehaviour<br>
+					{<br>
+						[SerializeField]<br>
+						protected Animator anim;<br>
+						<br>
+						[SerializeField]<br>
+						private GameObject healthDrop;<br>
+						<br>
+						[SerializeField]<br>
+						private float weaponDropChange = 0.5f;<br>
+						<br>
+						[SerializeField]<br>
+						private float healthDropChange = 0.5f;<br>
+						<br>
+						[SerializeField]<br>
+						private float timeToDespawn = 1f;<br>
+						<br>
+						protected Weapon currentWeapon;<br>
+						HealthEvent healthEvent;<br>
+						<br>
+						public void SetCurrentWeapon(Weapon weapon)<br>
+						{<br>
+							currentWeapon = weapon;<br>
+						}<br>
+						<br>
+						protected virtual void Start()<br>
+						{<br>
+							healthEvent = GetComponent<HealthEvent>();<br>
+							healthEvent.OnDeath += OnDeath;<br>
+						}<br>
+					
+						private void OnDeath()<br>
+						{<br>
+							if (Random.Range(0f, 1f) <= weaponDropChange)<br>
+								currentWeapon.UnEquip();<br>
+							else<br>
+								currentWeapon.Destroy(timeToDespawn);<br>
+								<br>
+							if (Random.Range(0f, 1f) <= healthDropChange)<br>
+								Instantiate(healthDrop, transform.position + Vector3.up, transform.rotation);<br>
+							Destroy(transform.parent.gameObject, timeToDespawn);<br>
+						}<br>
+						<br>
+						protected virtual void Update()<br>
+						{<br>
+							if (Vector3.Distance(Player.Position, transform.position) > 100)<br>
+							{<br>
+								healthEvent = GetComponent<HealthEvent>();<br>
+								healthEvent.OnDeath.Invoke();<br>
+								Debug.Log("enemy out of map");<br>
+							}<br>
+						}<br>
+						<br>
+					}<br>
+					</code>
 				<footer>
+					<br>
 					<ul class="actions">
-						<li><a href="BloodAndSteel.html" class="button large">Continue Reading</a></li>
+						<li><a href="https://github.com/darkAssassine/BloodAndSteel" class="button large">To Github repository</a></li>
 					</ul>
 				</footer>
 			</article>

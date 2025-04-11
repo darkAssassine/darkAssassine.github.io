@@ -384,14 +384,17 @@ code {
 	border: solid 1px rgba(160, 160, 160, 0.3);
 	font-family: "Courier New", monospace;
 	font-size: 0.9em;
-	margin: 0 0.25em;
-	padding: 0.25em 0.65em;
+	padding: 1em;
+    display: inline-block;
+	scrollbar-width: thin;
+    scrollbar-color: #444 #1e1e1e;
+    overflow-x: auto;
 }
 
 pre {
 	-webkit-overflow-scrolling: touch;
 	font-family: "Courier New", monospace;
-	font-size: 0.9em;
+	font-size: .9em;
 	margin: 0 0 2em 0;
 }
 
@@ -3780,7 +3783,7 @@ body.is-menu-visible #menu {
 	font-size: small;
 	cursor: pointer;
 	margin: 0;
-
+	display: inline-block;
 }
 
 
@@ -3789,6 +3792,10 @@ body.is-menu-visible #menu {
 	position: absolute;
 	background-color: #313131;
 	white-space: nowrap;
+	margin-left: 14px;
+	min-width: 125px;
+	box-sizing: border-box;
+	margin-top: -2px;
 }
 
 .dropdown-content a {
@@ -3852,3 +3859,38 @@ body.is-menu-visible #menu {
 .horizontal-scrollbox-container::-webkit-scrollbar-track {
     background-color: #1c1c1c;
 }
+summary {
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	gap: 0.5em;
+	list-style: none;
+	
+  }
+  
+  summary::-webkit-details-marker {
+	display: none;
+  }
+  
+  details[open] .arrow {
+	transform: rotate(90deg);
+	transition: transform 0.2s ease;
+	font-size: 0.8em;
+	margin-top: -19px;
+  }
+  
+  .arrow {
+	display: inline-block;
+	transition: transform 0.2s ease;
+	font-size: 0.8em;
+	margin-top: -19px;
+  }
+  summary:hover h3{
+	color: #ffaa0c;
+  }
+  summary:hover h2{
+	color: #ffaa0c;
+  }
+  summary:hover h4{
+	color: #ffaa0c;
+  }

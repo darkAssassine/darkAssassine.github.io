@@ -34,7 +34,7 @@
 							<a href="TuuliAndTheWindyMountain.html">Tuuli And The Windy Mountain</a>
 							<a href="BloodAndSteel.html">Blood And Steel</a>
 							<a href="Ultranatural.html">Ultranatural</a>
-							<a href="EnemyAI.html">EnemyAI</a>
+							<a href="EnemyAI.html">Enemy AI</a>
 						</div>
 					</li>
 
@@ -82,35 +82,286 @@
 					Working on a combat system taught me crucial lessons about responsive gameplay mechanics and what makes interactions feel satisfying to players in a group project context.</p>
 
 					<h2>About the Game</h2>
-					
 					<span class="image right"><img src="images/BloodAndSteel0.gif" alt="" /></span>
 				<p>
 					Blood and Steel is a first-person arena fighting game focused on intense, fast-paced medieval combat. 
-					Players face off in close-quarters battles using a variety of melee weapons across uniquely designed arenas. 
-					The game features fluid player movement and a dynamic combat system, including sword strikes, knockback kicks, 
+					Players face off in close-quarters battles using a variety of attacks. 
+					The game features fluid player movement and a simple combat system, including sword strikes, knockback kicks, 
 					and the ability to throw and retrieve your weapon. Players must adapt to two distinct enemy types, each with their own attack patterns, 
-					adding variety and challenge to each encounter. 
-					With handcrafted arenas built for nonstop action, 
-					Blood and Steel delivers a brutal and immersive melee experience.
+					adding variety and challenge to each encounter. <br>
+					With a handcrafted arena built for nonstop action, 
+					Blood and Steel delivers a brutal but funny melee experience.
 				</p>
 
-					
-				
 				<h2>Features</h2>
-				<span class="image right"><img src="images/BloodAndSteel1.gif" alt="" /></span>
 				<ul>
 					<li>Two enemy types, each with distinct attack patterns</li>
+					<span class="image right"><img src="images/BloodAndSteel1.gif" alt="" /></span>
 					<li>Fluid player movement</li>
 					<li>Melee combat system, including sword attacks and knockback kicks</li>
 					<li>Weapon mechanics, allowing players to throw and retrieve their sword</li>
 					<li>Enemy spawner and wavesystem</li>
-					<li>Reusable vfx and sounds system</li>
-
+					<li>Item drops such as healkits and weapondrops</li>
 				</ul>
 
-				<h2>The Team</h2>
+				<h2>Responsibilities</h2>
+					
+					<p>As the sole programmer, I was responsible for coding all features, 
+						<span class="image right"><img src="images/BloodAndSteel2.gif" alt="" /></span>
+						including gameplay mechanics, UI, and core systems.<br> 
+						I also fixed bugs to ensure smooth performance and managed version control with Perforce for efficient team collaboration. 
+						I wrote the Technical Design Documents (TDD), integrated VFX, sound, and animations to enhance the player experience, 
+						and provided technical support to troubleshoot issues.
+						<br>I also supported the team with game design, offered suggestions to artists, 
+						and assisted with Unity usage and basic training.</p>
+
+				<h2>What I learned</h2>
+				<p>Throughout this project, I enhanced my Unity and C# skills while learning the critical importance of clean code, <br>
+					solid architecture, and structured systems —often through challenging firsthand experiences. 
+					Collaborating with my team improved my communication and teamwork abilities, 
+					ensuring smooth coordination across all aspects of development. I also gained practical experience with Perforce version control, 
+					which streamlined our workflow and file management process. The project taught me valuable lessons about setting a clear, 
+					manageable scope early on and quickly identifying the core gameplay elements that drive player engagement. 
+					These insights, acquired through overcoming obstacles, ultimately helped me maintain focus and keep the development process enjoyable.</p>
+
+				<h2>Scripts</h2>
+				<p>The following scripts are excerpts from my project and may not include the full logic, as they are part of a larger set of scripts.</p>
+
+				<details><summary><h3>Player</h3><span class = "arrow">▶</span></summary>
+					<pre><code>using UnityEngine;
+
+[RequireComponent(typeof(Health))]
+public class Player : MonoBehaviour
+{
+	public static Vector3 LookDirection { get; private set; }
+	public static Vector3 Direction { get; private set; }
+	public static Vector3 Position { get; private set; }
+
+	[SerializeField]
+	private AnimationCurve ScreenshakeCurve;
+
+	[SerializeField]
+	private Transform camLock;
+
+	[SerializeField]
+	private Animator animator;
+
+	private Health health;
+
+	private void Awake()
+	{
+		health = GetComponent<Health>();
+	}
+
+	private void OnEnable()
+	{
+		health.OnDeath += PlayerDied;
+		health.OnHit += Screenshake;
+		health.OnHit += BloodyScreen;
+	}
+
+	private void OnDisable()
+	{
+		health.OnDeath -= PlayerDied;
+		health.OnHit -= Screenshake;
+		health.OnHit -= BloodyScreen;
+	}
+
+	private void FixedUpdate()
+	{
+		Direction = transform.forward;
+		Position = transform.position;
+		LookDirection = camLock.forward;
+	}
+
+	private void PlayerDied()
+	{
+		GameEvents.Instance.PlayerDied.Invoke();
+	}
+
+	private void Screenshake()
+	{
+		GameEvents.Instance.Screenshake.Invoke(ScreenshakeCurve);
+	}
+
+	private void BloodyScreen()
+	{
+		animator.Play("bloody_screen");
+	}
+}</code></pre></details>
+
+				<details><summary><h3>Enemy</h3><span class = "arrow">▶</span></summary>
+				<pre><code>using UnityEngine;
+
+[RequireComponent(typeof(Health))]
+public class Enemy : MonoBehaviour
+{
+    [SerializeField]
+    protected Animator animator;
+
+    [SerializeField]
+    private GameObject healthDrop;
+
+    [SerializeField]
+    private float weaponDropChange = 0.5f;
+
+    [SerializeField]
+    private float healthDropChange = 0.5f;
+
+    [SerializeField]
+    private float timeToDespawn = 1f;
+
+    [SerializeField] 
+    private float maxDistanceToPlayer;
+
+
+    protected Weapon currentWeapon;
+    Health health;
+
+    public void SetCurrentWeapon(Weapon weapon)
+    {
+        currentWeapon = weapon;
+    }
+
+    protected virtual void Start()
+    {
+        health = GetComponent<Health>();
+        health.OnDeath += OnDeath;
+
+    }
+
+    private void OnDeath()
+    {
+        if (Random.Range(0f, 1f) <= weaponDropChange)
+        {
+            currentWeapon.UnEquip();
+        }
+        else
+        {
+            currentWeapon.Destroy(timeToDespawn);
+        }
+
+        if (Random.Range(0f, 1f) <= healthDropChange)
+        {
+            Instantiate(healthDrop, transform.position + Vector3.up, transform.rotation);
+        }
+            
+        Destroy(transform.parent.gameObject, timeToDespawn);
+    }
+
+    protected virtual void Update()
+    {
+        if (Vector3.Distance(Player.Position, transform.position) > maxDistanceToPlayer)
+        {
+            health.OnDeath.Invoke();
+            Debug.Log("enemy too far");
+        }
+    }
+}</code></pre></details>
+<details><summary><h3>Drops</h3><span class = "arrow">▶</span></summary>
+	<pre><code>using UnityEngine;
+
+public class Drops : MonoBehaviour
+{
+	[SerializeField]
+	private Health health;
+
+	[SerializeField, Range(0, 1.0f)]
+	private float weaponDropChange;
+
+	[SerializeField, Range(0, 1.0f)]
+	private float healthDropsChange;
+
+	[SerializeField]
+	private SpawnStartWeapon spawnStartWeapon;
+
+	[SerializeField]
+	private GameObject healthDrop;
+
+	private void Start()
+	{
+		health.OnDeath += Drop;
+	}
+
+	private void OnDisable()
+	{
+		health.OnDeath -= Drop;
+	}
+
+	private void Drop()
+	{
+		if (Random.Range(0.0f, 1.0f) < weaponDropChange)
+		{
+			spawnStartWeapon.currentWeapon.GetComponent<Weapon>().UnEquip();
+		}
+
+		if (Random.Range(0.0f, 1.0f) < healthDropsChange)
+		{
+			Instantiate(healthDrop, transform.position + Vector3.up, transform.rotation);
+		}
+	}
+}</code></pre></details>
+<details><summary><h3>Audio Player</h3><span class = "arrow">▶</span></summary>
+	<pre><code>using UnityEngine;
+
+public class RandomAuidoPlayer : MonoBehaviour
+{
+    [SerializeField]
+    private AudioSource audioSource;
+
+    [SerializeField]
+    private AudioClip[] clips;
+
+    [SerializeField]
+    private bool PlayOnStart;
+
+    [SerializeField]
+    private bool autoPlayNext;
+
+    private bool shouldPlayNext = false;
+
+    void Start()
+    {
+        if (PlayOnStart)
+        {
+            Play();
+        }
+    }
+
+    void Update()
+    {
+        if (autoPlayNext && shouldPlayNext && audioSource.isPlaying == false)
+        {
+            Play();
+            Debug.Log("shit");
+        }
+    }
+
+    public void Play()
+    {
+        shouldPlayNext = true;
+        audioSource.clip = clips[Random.Range(0, clips.Length)];
+        audioSource.Play();
+    }
+
+    public void Stop()
+    {
+        shouldPlayNext = false;
+        audioSource.Stop();
+    }
+}</code></pre></details>
+<br>
+
+<h2>Tools</h2>
 				<ul>
-					<span class="image right"><img src="images/BloodAndSteel2.gif" alt="" /></span>
+					<li>Unity</li>	
+					<li>Perforce</li>
+					<li>Visual Sudio 2022</li>
+				</ul>
+
+
+<h2>My Team</h2>
+				<ul>
 					<li>Benjamin Köcher: Engineer</li>
 					
 					<li>Fabrizio Maggiacomo: 3D ART, Character Models, Animation</li>
@@ -119,67 +370,8 @@
 					<li>Maximillian Brunsch: Game Design, Level Design</li>
 					<li>Moritz Schmidt:  3D ART, 2D ART, Art Direction, Environment, UI</li>
 				</ul>
-				<h2>Scripts</h2>
-				<h3>Enemy</h3>
-				<code>using UnityEngine; <br>
 
 
-					[RequireComponent(typeof(HealthEvent))]<br>
-					public class Enemy : MonoBehaviour<br>
-					{<br>
-						[SerializeField]<br>
-						protected Animator anim;<br>
-						<br>
-						[SerializeField]<br>
-						private GameObject healthDrop;<br>
-						<br>
-						[SerializeField]<br>
-						private float weaponDropChange = 0.5f;<br>
-						<br>
-						[SerializeField]<br>
-						private float healthDropChange = 0.5f;<br>
-						<br>
-						[SerializeField]<br>
-						private float timeToDespawn = 1f;<br>
-						<br>
-						protected Weapon currentWeapon;<br>
-						HealthEvent healthEvent;<br>
-						<br>
-						public void SetCurrentWeapon(Weapon weapon)<br>
-						{<br>
-							currentWeapon = weapon;<br>
-						}<br>
-						<br>
-						protected virtual void Start()<br>
-						{<br>
-							healthEvent = GetComponent<HealthEvent>();<br>
-							healthEvent.OnDeath += OnDeath;<br>
-						}<br>
-					
-						private void OnDeath()<br>
-						{<br>
-							if (Random.Range(0f, 1f) <= weaponDropChange)<br>
-								currentWeapon.UnEquip();<br>
-							else<br>
-								currentWeapon.Destroy(timeToDespawn);<br>
-								<br>
-							if (Random.Range(0f, 1f) <= healthDropChange)<br>
-								Instantiate(healthDrop, transform.position + Vector3.up, transform.rotation);<br>
-							Destroy(transform.parent.gameObject, timeToDespawn);<br>
-						}<br>
-						<br>
-						protected virtual void Update()<br>
-						{<br>
-							if (Vector3.Distance(Player.Position, transform.position) > 100)<br>
-							{<br>
-								healthEvent = GetComponent<HealthEvent>();<br>
-								healthEvent.OnDeath.Invoke();<br>
-								Debug.Log("enemy out of map");<br>
-							}<br>
-						}<br>
-						<br>
-					}<br>
-					</code>
 				<footer>
 					<br>
 					<ul class="actions">

@@ -7,11 +7,11 @@
 <html>
 
 <head>
-	<title>SubPages Template</title>
+	<title>Game Programming Patterns Exercises</title>
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 	<link rel="stylesheet" href="assets/css/main.css" />
-	<link rel="icon" type=" image/png" href="images/WebsiteIconVar.png" />
+	<link rel="icon" type=" image/png" href="WebsiteIcon.png" />
 </head>
 
 <body class="is-preload">
@@ -56,9 +56,46 @@
 						</div>
 
 					</li>
+					
+				</ul>
+				
+			</nav>
+			<nav class="main">
+				<ul>
+					<li class="menu">
+						<a class="fa-bars" href="#menu">Menu</a>
+					</li>
 				</ul>
 			</nav>
 		</header>
+
+		<!-- Menu -->
+		<section id="menu">
+
+			<!-- Links -->
+				<section>
+					<ul class="links">
+						<li>							
+								<h3>semester projects</h3>
+								<a href="TuuliAndTheWindyMountain.html"><p>Tuuli And The Windy Mountain</p></a>
+								<a href="BloodAndSteel.html"><p>Blood And Steel</p></a>
+								<a href="Ultranatural.html"><p>Ultranatural</p></a>
+								<a href="EnemyAI.html"><p>Enemy AI</p></a>
+						</li>
+						<li>
+								<h3>private projects</h3>
+								<a href="GameProgrammingPatternsExercises.html"><p>Game Programming Patterns Exercises</p></a>
+								<a href="UnityExercises.html"><p>Unity Exercise</p></a>
+						</li>
+						<li>
+								<h3>About Me</h3>
+								<a href="https://www.linkedin.com/in/benjamin-koecher-4913a52a2"><p>LinkedIn</p></a>
+								<a href="https://github.com/darkAssassine"><p>GitHub</p></a>
+							</a>
+						</li>
+					</ul>
+				</section>
+		</section>
 
 		<!-- Main -->
 		<div id="main">
@@ -67,21 +104,58 @@
 			<article class="post">
 				<header>
 					<div class="title">
-						<h2><a href="GameProgrammingPatternsExercises.html">Unity Exercises</a></h2>
-						<p>Unity, c#</p>
+						<h2><a href="https://gameprogrammingpatterns.com">Game Programming Patterns Exercises</a></h2>
+						<p>c#, visual studio 2022</p>
 					</div>
 					<div class="meta">
 						<time class="published" datetime="2015-10-22">April 2025</time>
-						<a href="https://unity.com" class="author"><span class="name">Website</span><img
-								src="images/UnityIcon.png" /></a>
+						<a href="https://gameprogrammingpatterns.com" class="author"><span class="name">Book</span><img
+							src="images/GameProgrammingPatternsIcon.png" /></a>
 					</div>
 				</header>
 				
-				<p>For this project, the goal is to practice regularly and apply what I’ve learned by creating a collection of prototypes, reusable systems, and mini-games. 
-					This project places a strong emphasis on game feel, clean code, solid structure, and reusability.</p>
+				<p>This is project is about the book <a href="https://gameprogrammingpatterns.com">game programming patterns </a>by Robert Nystrom.
+					The goal is to implement every chapter and learn more about patterns, structure, and cleaner code.
+					I try to work on this project once or twice a week. 
+					This project also serves as a practical reference or “cheat sheet” for anyone interested. 
+					<br><br>You can find my GitHub repository <a href="https://github.com/darkAssassine/GameProgrammingPatternsExercises">here</a>.</p>
+					<br>
+				<h2>Command Pattern</h2>
+				<p>Command is a behavioral design pattern that turns a request into a stand-alone object that contains all information about the request.</p>
+
+				<h3>Use cases</h3>
+				<ul>
+					<li>Undo/Redo</li>
+					<li>Player Input Handling</li>
+					<li>Character abilities/Actions</li>
+					<li>AI Command Behavior</li>
+				</ul>
+
+				<h2>Flyweight pattern</h2>
+				<p>Flyweight is a structural design pattern that lets you fit more objects into the available amount of RAM 
+					by sharing common parts of state between multiple objects instead of keeping all of the data in each object.</p>
+
+				<h3>Use cases</h3>
+				<ul>
+					<li>Rendering a huge ammount of objects</li>
+					<li>Tile based maps</li>
+					<li>Sprite Atlas</li>
+					<li>Game Entities with Shared Logic</li>
+				</ul>
+
+				<h2>Observer pattern</h2>
+				<p>Observer is a behavioral design pattern that lets you define a subscription mechanism to notify multiple objects about any events that happen to the object they’re observing.</p>
+
+				<h3>Use cases</h3>
+				<ul>
+					<li>UI Updates</li>
+					<li>Achievement Systems</li>
+					<li>Quest and Objective Systems</li>
+					<li>Input Handling</li>
+				</ul>
 				<footer>
 					<ul class="actions">
-						<li><a href="UnityExercises.html" class="button large">Continue Reading</a></li>
+						<li><a href="https://github.com/darkAssassine/GameProgrammingPatternsExercises" class="button large">GitHub repository</a></li>
 					</ul>
 				</footer>
 			</article>

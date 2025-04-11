@@ -120,22 +120,22 @@
 					This project also serves as a practical reference or cheat sheet for anyone interested. 
 					<br>You can find my GitHub repository <a href="https://github.com/darkAssassine/GameProgrammingPatternsExercises">here</a>.</p>
 					<br>
-
+					<br>
 					<h2>!Disclaimer!</h2>
 					<p>The following scripts and examples are simple, basic projects meant to demonstrate how the pattern works. 
 						In real-world scenarios, you probably wouldn’t use them exactly like this and might apply a different pattern depending on the context.</p>
 						<br>
-						
+						<br>
 				<h2>Command Pattern</h2>
 				<p>Command is a behavioral design pattern that turns a request into a stand-alone object that contains all information about the request.</p>
-				
+				<br>
 				<h3>Example</h3>
 				<p>In this example, we have an actor that holds a position, an input handler that triggers commands on the pressed key, 
 					and a set of command classes. <br>When the <b>A</b> key is pressed, the move command shifts the player in a random -X direction; 
 					pressing <b>D</b> moves the player in a random +X direction. <br>Similarly, pressing <b>W</b> moves the player in a random +Y direction, 
-					and <b>S</b> moves them in a random -Y direction. <br>The <b>Q</b> and <b>E</b> keys are used to undo and redo the commands.</p>
+					and <b>S</b> moves them in a random -Y direction. <br>The <b>Q</b> and <b>E</b> keys are used to undo and redo the commands.</p><br>
 
-<details><summary><h4>Actor</h4><span class = "arrow">▶</span></summary>
+<details><summary><h3>Actor</h3><span class = "arrow">▶</span></summary>
 <pre><code>namespace CommandPattern
 {
 	internal class Actor
@@ -150,7 +150,7 @@
 	}
 }</code></pre></details>
 
-<details><summary><h4>Command</h4><span class = "arrow">▶</span></summary>
+<details><summary><h3>Command</h3><span class = "arrow">▶</span></summary>
 	<pre><code>namespace CommandPattern
 {
 	internal class Command
@@ -161,7 +161,7 @@
 	}
 }</code></pre></details>
 
-<details><summary><h4>Input Handler</h4><span class = "arrow">▶</span></summary>
+<details><summary><h3>Input Handler</h3><span class = "arrow">▶</span></summary>
 	<pre><code>namespace CommandPattern
 {
 	internal class InputHandler
@@ -259,7 +259,7 @@
 	}
 }</code></pre></details>
 
-<details><summary><h4>Move Command</h4><span class = "arrow">▶</span></summary>
+<details><summary><h3>Move Command</h3><span class = "arrow">▶</span></summary>
 	<pre><code>namespace CommandPattern
 {
 	internal class MoveCommand : Command
@@ -292,7 +292,7 @@
 	}
 }</code></pre></details>
 
-<details><summary><h4>Program</h4><span class = "arrow">▶</span></summary>
+<details><summary><h3>Program</h3><span class = "arrow">▶</span></summary>
 	<pre><code>namespace CommandPattern
 {
 	internal class Program
@@ -309,7 +309,8 @@
 			}
 		}
 	}
-}</code></pre></details><p></p>
+}</code></pre></details>
+<br>
 <h3>Use cases</h3>
 <ul>
 	<li>Undo/Redo</li>
@@ -317,6 +318,7 @@
 	<li>Character abilities/Actions</li>
 	<li>AI Command Behavior</li>
 </ul>
+<br>
 <br>
 				<h2>Flyweight pattern</h2>
 				<p>Flyweight is a structural design pattern that lets you fit more objects into the available amount of RAM 
@@ -332,9 +334,9 @@
 					 his setup reduces memory usage and demonstrates the Flyweight Pattern in action. 
 					 Keep in mind that in a real-world application, 
 					 you wouldn’t load all the pages at once. Instead,
-					  you would typically load just the current page and, to reduce loading times, perhaps the previous and next pages as well.</p>
+					  you would typically load just the current page and, to reduce loading times, perhaps the previous and next pages as well.</p><br>
 
-	<details><summary><h4>Page</h4><span class = "arrow">▶</span></summary>
+	<details><summary><h3>Page</h3><span class = "arrow">▶</span></summary>
 	<pre><code>namespace CommandPattern
 namespace FlyweightPattern
 {
@@ -357,7 +359,7 @@ namespace FlyweightPattern
 	}
 }</code></pre></details>
 
-<details><summary><h4>Page Layout</h4><span class = "arrow">▶</span></summary>
+<details><summary><h3>Page Layout</h3><span class = "arrow">▶</span></summary>
 	<pre><code>namespace CommandPattern
 namespace FlyweightPattern
 {
@@ -370,7 +372,7 @@ namespace FlyweightPattern
 	}
 }</code></pre></details>
 
-<details><summary><h4>Program</h4><span class = "arrow">▶</span></summary>
+<details><summary><h3>Program</h3><span class = "arrow">▶</span></summary>
 	<pre><code>namespace FlyweightPattern
 		{
 			internal class Program
@@ -426,7 +428,7 @@ namespace FlyweightPattern
 		}
 		</code></pre></details>
 
-		<details><summary><h4>Page Layout</h4><span class = "arrow">▶</span></summary>
+		<details><summary><h3>Page Layout</h3><span class = "arrow">▶</span></summary>
 			<pre><code>namespace CommandPattern
 		namespace FlyweightPattern
 		{
@@ -438,7 +440,7 @@ namespace FlyweightPattern
 				public string End = "\n\n\n\n\n";
 			}
 		}</code></pre></details>
-		<p></p>
+		<br>
 		<h3>Use cases</h3> 
 		<ul>
 			<li>Rendering a huge ammount of objects</li>
@@ -447,12 +449,13 @@ namespace FlyweightPattern
 			<li>Game Entities with Shared Logic</li>
 		</ul>
 				<br>
+				<br>
 				<h2>Observer pattern</h2>
-				<p>Observer is a behavioral design pattern that lets you define a subscription mechanism to notify multiple objects about any events that happen to the object they’re observing.</p>
+				<p>Observer is a behavioral design pattern that lets you define a subscription mechanism to notify multiple objects about any events that happen to the object they’re observing.</p><br>
 				<h3>Example</h3>
 				<p>In this example, we have observers that watch a subject. The subject maintains a list of all observers and triggers the notify function when invoked. 
-					However, in most real-world scenarios, you would likely avoid writing a custom class for the observer pattern and instead use built-in events or actions.</p>
-				<details><summary><h4>Enemy</h4><span class = "arrow">▶</span></summary>
+					However, in most real-world scenarios, you would likely avoid writing a custom class for the observer pattern and instead use built-in events or actions.</p><br>
+				<details><summary><h3>Enemy</h3><span class = "arrow">▶</span></summary>
 					<pre><code>namespace ObserverPattern
 {
 	internal class Enemy
@@ -472,7 +475,7 @@ namespace FlyweightPattern
 	}
 }</code></pre></details>
 
-<details><summary><h4>IOserver</h4><span class = "arrow">▶</span></summary>
+<details><summary><h3>IOserver</h3><span class = "arrow">▶</span></summary>
 	<pre><code>namespace ObserverPattern
 {
 	internal interface IObserver
@@ -481,7 +484,7 @@ namespace FlyweightPattern
 	}
 }</code></pre></details>
 
-<details><summary><h4>Player Attack</h4><span class = "arrow">▶</span></summary>
+<details><summary><h3>Player Attack</h3><span class = "arrow">▶</span></summary>
 	<pre><code>namespace CommandPattern
 namespace ObserverPattern
 {
@@ -499,7 +502,7 @@ namespace ObserverPattern
 	}
 }</code></pre></details>
 
-<details><summary><h4>Program</h4><span class = "arrow">▶</span></summary>
+<details><summary><h3>Program</h3><span class = "arrow">▶</span></summary>
 	<pre><code>namespace ObserverPattern
 {
 	// This implementation demonstrates the Observer Pattern using an interface and a Subject class. 
@@ -531,7 +534,7 @@ namespace ObserverPattern
 	}
 }</code></pre></details>
 
-<details><summary><h4>Subject</h4><span class = "arrow">▶</span></summary>
+<details><summary><h3>Subject</h3><span class = "arrow">▶</span></summary>
 	<pre><code>namespace ObserverPattern
 {
 	internal class Subject
@@ -559,7 +562,7 @@ namespace ObserverPattern
 }</code></pre></details>
 
 
-<details><summary><h4>Win Condition</h4><span class = "arrow">▶</span></summary>
+<details><summary><h3>Win Condition</h3><span class = "arrow">▶</span></summary>
 	<pre><code>namespace ObserverPattern
 namespace ObserverPattern
 {
@@ -573,7 +576,7 @@ namespace ObserverPattern
 }</code></pre></details>
 
 
-				<p></p>
+				<br>
 				<h3>Use cases</h3>
 				<ul>
 					<li>UI Updates</li>
@@ -581,7 +584,7 @@ namespace ObserverPattern
 					<li>Quest and Objective Systems</li>
 					<li>Input Handling</li>
 				</ul>
-			
+				<br>
 				<footer>
 					
 					<ul class="actions">

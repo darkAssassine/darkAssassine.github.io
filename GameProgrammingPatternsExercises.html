@@ -117,35 +117,463 @@
 				<p>This is project is about the book <a href="https://gameprogrammingpatterns.com">game programming patterns </a>by Robert Nystrom.
 					The goal is to implement every chapter and learn more about patterns, structure, and cleaner code.
 					I try to work on this project once or twice a week. 
-					This project also serves as a practical reference or “cheat sheet” for anyone interested. 
-					<br><br>You can find my GitHub repository <a href="https://github.com/darkAssassine/GameProgrammingPatternsExercises">here</a>.</p>
+					This project also serves as a practical reference or cheat sheet for anyone interested. 
+					<br>You can find my GitHub repository <a href="https://github.com/darkAssassine/GameProgrammingPatternsExercises">here</a>.</p>
 					<br>
+
+					<h2>!Disclaimer!</h2>
+					<p>The following scripts and examples are simple, basic projects meant to demonstrate how the pattern works. 
+						In real-world scenarios, you probably wouldn’t use them exactly like this and might apply a different pattern depending on the context.</p>
+						<br>
+						
 				<h2>Command Pattern</h2>
 				<p>Command is a behavioral design pattern that turns a request into a stand-alone object that contains all information about the request.</p>
+				
+				<h3>Example</h3>
+				<p>In this example, we have an actor that holds a position, an input handler that triggers commands on the pressed key, 
+					and a set of command classes. <br>When the <b>A</b> key is pressed, the move command shifts the player in a random -X direction; 
+					pressing <b>D</b> moves the player in a random +X direction. <br>Similarly, pressing <b>W</b> moves the player in a random +Y direction, 
+					and <b>S</b> moves them in a random -Y direction. <br>The <b>Q</b> and <b>E</b> keys are used to undo and redo the commands.</p>
 
-				<h3>Use cases</h3>
-				<ul>
-					<li>Undo/Redo</li>
-					<li>Player Input Handling</li>
-					<li>Character abilities/Actions</li>
-					<li>AI Command Behavior</li>
-				</ul>
+<details><summary><h4>Actor</h4><span class = "arrow">▶</span></summary>
+<pre><code>namespace CommandPattern
+{
+	internal class Actor
+	{
+		public int x, y;
 
+		public void Move(int _x, int _y)
+		{
+			x = _x;
+			y = _y;
+		}
+	}
+}</code></pre></details>
+
+<details><summary><h4>Command</h4><span class = "arrow">▶</span></summary>
+	<pre><code>namespace CommandPattern
+{
+	internal class Command
+	{
+		public Command() { }
+		public virtual void Execute() { }
+		public virtual void Undo() { }
+	}
+}</code></pre></details>
+
+<details><summary><h4>Input Handler</h4><span class = "arrow">▶</span></summary>
+	<pre><code>namespace CommandPattern
+{
+	internal class InputHandler
+	{
+		Actor actor = new Actor();
+		List<Command> commands = new List<Command>();
+		int index = -1;
+		public void Update()
+		{
+			Command newCommand = HandleInput();
+			if (newCommand != null)
+			{
+				newCommand.Execute();
+				UpdateCommandsList();
+				commands.Add(newCommand);
+				index++;
+				Console.WriteLine($"{actor.x} , {actor.y}");
+			}
+		}
+
+		public void UpdateCommandsList()
+		{
+			for (int i = index; i < commands.Count; i++)
+			{
+				if (i > 0 && i < commands.Count - 1)
+				{
+					commands.RemoveAt(i);
+				}
+			}
+		}
+
+		public Command HandleInput()
+		{
+			string line = Console.ReadKey(true).KeyChar.ToString();
+			if (line == "A" || line == "a")
+			{
+				return new MoveCommand(actor, -1, 0);
+			}
+			if (line == "D" || line == "d")
+			{
+				return new MoveCommand(actor, 1, 0);
+			}
+			if (line == "W" || line == "w")
+			{
+				return new MoveCommand(actor, 0, 1);
+			}
+			if (line == "S" || line == "s")
+			{
+				return new MoveCommand(actor, 0, -1);
+			}
+			if (line == "Q" || line == "q")
+			{
+				index--;
+				if (index < 0)
+				{
+					index = 0;
+				}
+				else
+				{
+					commands[index].Undo();
+					Console.WriteLine($"{actor.x} , {actor.y}");
+				}
+			}
+
+			if (line == "E" || line == "e")
+			{
+				index++;
+				if (index >= commands.Count - 1)
+				{
+					index = commands.Count - 1;
+				}
+				else
+				{
+					commands[index].Execute();
+					Console.WriteLine($"{actor.x} , {actor.y}");
+				}
+			}
+			return null;
+		}
+
+		// had long delays
+		public bool IsKeyDown(ConsoleKey _key)
+		{
+			if (Console.KeyAvailable)
+			{
+				ConsoleKey pressedKey = Console.ReadKey(true).Key;
+
+				if (_key == pressedKey)
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+	}
+}</code></pre></details>
+
+<details><summary><h4>Move Command</h4><span class = "arrow">▶</span></summary>
+	<pre><code>namespace CommandPattern
+{
+	internal class MoveCommand : Command
+	{
+		Actor actor;
+		int x, y;
+		int xBefore, yBefore;
+
+		public MoveCommand(Actor _actor, int _xDir, int _yDir)
+		{
+			Random rnd = new Random();
+			actor = _actor;
+			x = actor.x;
+			y = actor.y;
+			x += _xDir * rnd.Next(10);
+			y += _yDir * rnd.Next(10);
+			xBefore = x;
+			yBefore = y;
+		}
+
+		public override void Execute()
+		{
+			actor.Move(x, y);
+		}
+
+		public override void Undo()
+		{
+			actor.Move(xBefore, yBefore);
+		}
+	}
+}</code></pre></details>
+
+<details><summary><h4>Program</h4><span class = "arrow">▶</span></summary>
+	<pre><code>namespace CommandPattern
+{
+	internal class Program
+	{
+		internal static void Main(string[] args)
+		{
+			InputHandler inputHandler = new InputHandler();
+
+			Console.WriteLine("WASD to move. Q to undo R to Redo. You move with random speed.");
+
+			while (true)
+			{
+				inputHandler.Update();
+			}
+		}
+	}
+}</code></pre></details><p></p>
+<h3>Use cases</h3>
+<ul>
+	<li>Undo/Redo</li>
+	<li>Player Input Handling</li>
+	<li>Character abilities/Actions</li>
+	<li>AI Command Behavior</li>
+</ul>
+<br>
 				<h2>Flyweight pattern</h2>
 				<p>Flyweight is a structural design pattern that lets you fit more objects into the available amount of RAM 
 					by sharing common parts of state between multiple objects instead of keeping all of the data in each object.</p>
 
-				<h3>Use cases</h3>
-				<ul>
-					<li>Rendering a huge ammount of objects</li>
-					<li>Tile based maps</li>
-					<li>Sprite Atlas</li>
-					<li>Game Entities with Shared Logic</li>
-				</ul>
+			
+				<h3>Example</h3>
+				<p>Let’s say we want to create a book with 10,000 pages, and each page has the same layout—for example, 
+					the author’s name, publisher, and other metadata shown at the bottom. To handle this efficiently,
+					 we create a PageLayout class to store the shared layout information, and a Page class to represent individual pages. 
+					 We also have a function that generates random sentences to simulate unique content for each page. 
+					 Instead of duplicating layout data for every page, each Page holds a reference to the same PageLayout instance. T
+					 his setup reduces memory usage and demonstrates the Flyweight Pattern in action. 
+					 Keep in mind that in a real-world application, 
+					 you wouldn’t load all the pages at once. Instead,
+					  you would typically load just the current page and, to reduce loading times, perhaps the previous and next pages as well.</p>
 
+	<details><summary><h4>Page</h4><span class = "arrow">▶</span></summary>
+	<pre><code>namespace CommandPattern
+namespace FlyweightPattern
+{
+	internal class Page
+	{
+		private PageLayout layout;
+		private string body;
+		public readonly int PageNumber;
+		public Page(PageLayout _layout, string _body, int _pageNumber)
+		{
+			layout = _layout;
+			body = _body;
+			PageNumber = _pageNumber;
+		}
+
+		public void Print()
+		{
+			Console.Write($"{layout.Header}{body}{layout.Ad}{layout.Author}Page {PageNumber}{layout.End}");
+		}
+	}
+}</code></pre></details>
+
+<details><summary><h4>Page Layout</h4><span class = "arrow">▶</span></summary>
+	<pre><code>namespace CommandPattern
+namespace FlyweightPattern
+{
+	internal class PageLayout
+	{
+		public string Header = "Flyweightpattern\n\n";
+		public string Ad = "\n\nIf you're interested in learning more, feel free to visit my webpage at www.somepage.de for additional details.\n";
+		public string Author = "\nAuthorname\n\n";
+		public string End = "\n\n\n\n\n";
+	}
+}</code></pre></details>
+
+<details><summary><h4>Program</h4><span class = "arrow">▶</span></summary>
+	<pre><code>namespace FlyweightPattern
+		{
+			internal class Program
+			{
+				static void Main(string[] args)
+				{
+					PageLayout layout = new PageLayout();
+		
+					int pageAmount = 10;
+					for (int i = 0; i < pageAmount; i++)
+					{
+						Page page = new Page(layout, CreateRandomBody(10), i);
+						page.Print();
+					}
+				}
+		
+				private static string CreateRandomBody(int _sentences)
+				{
+					string body = "";
+					for (int y = 0; y < _sentences; y++)
+					{
+						body += CreateRandomSentence();
+					}
+					return body;
+				}
+		
+				private static string CreateRandomSentence()
+				{
+					return RandomSubject() + RandomVerb() + RandomObject() + "\n";
+				}
+		
+				private static string RandomSubject()
+				{
+					string[] subjects = { "Andreas ", "Benjamin ", "My cat ", "My dog ", "The car ", "My junior ", "The senior ", "My neightbor " };
+					Random rand = new Random();
+					return subjects[rand.Next(subjects.Length)];
+				}
+		
+				private static string RandomVerb()
+				{
+					string[] verbs = { "ate ", "had ", "makes ", "codes ", "hates ", "writes ", "lost " };
+					Random rand = new Random();
+					return verbs[rand.Next(verbs.Length)];
+				}
+				private static string RandomObject()
+				{
+					string[] objects = { "lasagne.", "pizza.", "my website.", "wallet.", "some words." };
+		
+					Random rand = new Random();
+					return objects[rand.Next(objects.Length)];
+				}
+			}
+		}
+		</code></pre></details>
+
+		<details><summary><h4>Page Layout</h4><span class = "arrow">▶</span></summary>
+			<pre><code>namespace CommandPattern
+		namespace FlyweightPattern
+		{
+			internal class PageLayout
+			{
+				public string Header = "Flyweightpattern\n\n";
+				public string Ad = "\n\nIf you're interested in learning more, feel free to visit my webpage at www.somepage.de for additional details.\n";
+				public string Author = "\nAuthorname\n\n";
+				public string End = "\n\n\n\n\n";
+			}
+		}</code></pre></details>
+		<p></p>
+		<h3>Use cases</h3> 
+		<ul>
+			<li>Rendering a huge ammount of objects</li>
+			<li>Tile based maps</li>
+			<li>Sprite Atlas</li>
+			<li>Game Entities with Shared Logic</li>
+		</ul>
+				<br>
 				<h2>Observer pattern</h2>
 				<p>Observer is a behavioral design pattern that lets you define a subscription mechanism to notify multiple objects about any events that happen to the object they’re observing.</p>
+				<h3>Example</h3>
+				<p>In this example, we have observers that watch a subject. The subject maintains a list of all observers and triggers the notify function when invoked. 
+					However, in most real-world scenarios, you would likely avoid writing a custom class for the observer pattern and instead use built-in events or actions.</p>
+				<details><summary><h4>Enemy</h4><span class = "arrow">▶</span></summary>
+					<pre><code>namespace ObserverPattern
+{
+	internal class Enemy
+	{
+		int health = 100;
+		public Subject Died = new Subject();
 
+		public void TakeDamage(int _damage)
+		{
+			health -= _damage;
+			Console.WriteLine($"Enemy has {health} left.");
+			if (health <= 0)
+			{
+				Died.Invoke(0);
+			}
+		}
+	}
+}</code></pre></details>
+
+<details><summary><h4>IOserver</h4><span class = "arrow">▶</span></summary>
+	<pre><code>namespace ObserverPattern
+{
+	internal interface IObserver
+	{
+		public void Notify(int _damage);
+	}
+}</code></pre></details>
+
+<details><summary><h4>Player Attack</h4><span class = "arrow">▶</span></summary>
+	<pre><code>namespace CommandPattern
+namespace ObserverPattern
+{
+	internal class PlayerAttack : IObserver
+	{
+		Enemy enemy;
+		public PlayerAttack(Enemy _enemy)
+		{
+			enemy = _enemy;
+		}
+		public void Notify(int damage)
+		{
+			enemy.TakeDamage(damage);
+		}
+	}
+}</code></pre></details>
+
+<details><summary><h4>Program</h4><span class = "arrow">▶</span></summary>
+	<pre><code>namespace ObserverPattern
+{
+	// This implementation demonstrates the Observer Pattern using an interface and a Subject class. 
+	// In real-world applications, especially in C#, it is more common to use events (`event` keyword), 
+	// `Action<T>`, or engine-specific solutions like Unity's `UnityEvent` for handling observer patterns dynamically.
+	internal class Program
+	{
+		static void Main(string[] args)
+		{
+			Subject playerAttacked = new Subject();
+			Enemy enemy = new Enemy();
+			PlayerAttack playerAttack = new PlayerAttack(enemy);
+			WinCondition winCondition = new WinCondition();
+
+			playerAttacked.Attach(playerAttack);
+			enemy.Died.Attach(winCondition);
+
+			Console.WriteLine("Press 'E' to attack.\n");
+
+			while (true)
+			{
+				string line = Console.ReadKey(true).KeyChar.ToString();
+				if (line == "E" || line == "e")
+				{
+					playerAttacked.Invoke(35);
+				}
+			}
+		}
+	}
+}</code></pre></details>
+
+<details><summary><h4>Subject</h4><span class = "arrow">▶</span></summary>
+	<pre><code>namespace ObserverPattern
+{
+	internal class Subject
+	{
+		private List<IObserver> observers = new List<IObserver>();
+
+		public void Attach(IObserver _observer)
+		{
+			observers.Add(_observer);
+		}
+
+		public void Detach(IObserver _observer)
+		{
+			observers.Remove(_observer);
+		}
+
+		public void Invoke(int _damage)
+		{
+			foreach (IObserver _observer in observers)
+			{
+				_observer.Notify(_damage);
+			}
+		}
+	}
+}</code></pre></details>
+
+
+<details><summary><h4>Win Condition</h4><span class = "arrow">▶</span></summary>
+	<pre><code>namespace ObserverPattern
+namespace ObserverPattern
+{
+	internal class WinCondition : IObserver
+	{
+		public void Notify(int damage)
+		{
+			Console.WriteLine("You Win");
+		}
+	}
+}</code></pre></details>
+
+
+				<p></p>
 				<h3>Use cases</h3>
 				<ul>
 					<li>UI Updates</li>
@@ -153,7 +581,9 @@
 					<li>Quest and Objective Systems</li>
 					<li>Input Handling</li>
 				</ul>
+			
 				<footer>
+					
 					<ul class="actions">
 						<li><a href="https://github.com/darkAssassine/GameProgrammingPatternsExercises" class="button large">GitHub repository</a></li>
 					</ul>

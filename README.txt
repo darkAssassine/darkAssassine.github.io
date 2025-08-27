@@ -16,7 +16,6 @@ you can use for pretty much whatever.
 AJ
 aj@lkn.io | @ajlkn
 
-
 Credits:
 
 	Demo Images:
@@ -28,5 +27,6 @@ Credits:
 	Other:
 		jQuery (jquery.com)
 		Responsive Tools (github.com/ajlkn/responsive-tools)
+
 
 
